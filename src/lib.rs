@@ -8,6 +8,7 @@ use xxxdh::{inmem, Protocol};
 
 pub mod errors;
 
+/// Curve25519 with Ristretto point compression keypair.
 #[wasm_bindgen]
 pub struct X25519RistrettoKeyPair {
     keypair: x25519_ristretto::KeyPair,
@@ -15,6 +16,7 @@ pub struct X25519RistrettoKeyPair {
 
 #[wasm_bindgen]
 impl X25519RistrettoKeyPair {
+    /// Generate a new KeyPair.
     #[wasm_bindgen(constructor)]
     pub fn generate() -> Self {
         Self {
@@ -22,20 +24,24 @@ impl X25519RistrettoKeyPair {
         }
     }
 
+    /// Sign a message.
     pub fn sign(&self, data: &[u8]) -> Vec<u8> {
         self.keypair.sign(data).to_vec()
     }
 
+    /// Derives the PublicKey corresponding to KeyPair SK.
     #[wasm_bindgen(getter)]
     pub fn public(&self) -> Vec<u8> {
         self.keypair.to_public().to_vec()
     }
 
+    /// Convert a key into a vec of bytes.
     pub fn to_vec(&self) -> Vec<u8> {
         self.keypair.to_vec()
     }
 }
 
+/// X3DH Protocol specialization using x25519_ristretto keypair, in-memory key storage, sha256 KDF and aes256 in GCM mode as AEAD.
 #[wasm_bindgen]
 pub struct ProtocolX25519RistrettoInMemSha256Aes256Gm {
     protocol: Protocol<
@@ -50,6 +56,7 @@ pub struct ProtocolX25519RistrettoInMemSha256Aes256Gm {
 
 #[wasm_bindgen]
 impl ProtocolX25519RistrettoInMemSha256Aes256Gm {
+    /// Create a new protocol instance.
     #[wasm_bindgen(constructor)]
     pub fn new(
         identity_keypair: js_sys::Uint8Array,
@@ -98,6 +105,7 @@ impl ProtocolX25519RistrettoInMemSha256Aes256Gm {
         })
     }
 
+    /// Prepare initial message and derive shared secret key for sending party.
     pub fn prepare_init_msg(
         &mut self,
         receiver_identity: js_sys::Uint8Array,
@@ -141,6 +149,7 @@ impl ProtocolX25519RistrettoInMemSha256Aes256Gm {
         ))
     }
 
+    /// Derive shared secret key for receiving party.
     pub fn derive_shared_secret(
         &mut self,
         sender_identity: js_sys::Uint8Array,
@@ -183,6 +192,7 @@ impl ProtocolX25519RistrettoInMemSha256Aes256Gm {
     }
 }
 
+/// Initial message bundle. Contains initial message and shared secret.
 #[wasm_bindgen]
 pub struct InitMsgBundle {
     init_msg: InitMsg,
@@ -220,6 +230,7 @@ impl InitMsgBundle {
     }
 }
 
+/// Initial message data for sending party.
 #[wasm_bindgen]
 #[derive(Clone)]
 pub struct InitMsg {
