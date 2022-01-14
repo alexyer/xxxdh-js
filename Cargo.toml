@@ -1,12 +1,14 @@
 [package]
 name = "xxxdh-js"
 license = "MIT"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 authors = ["Oleksandr Yermakov <olexander.yermakov@gmail.com>"]
 categories = ["cryptography"]
 keywords = ["crypto", "cryptography", "x3dh"]
 description = "WASM wrapper around xxxdh library implementing Extended Triple Diffie-Hellman key exchange."
+repository = "https://github.com/alexyer/xxxdh-js"
+readme = "README.md"
 
 [lib]
 crate-type = ["cdylib"]
